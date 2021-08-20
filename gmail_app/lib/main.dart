@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   final controllerName = TextEditingController();
   final controllerTo = TextEditingController();
+  final controllerFrom = TextEditingController();
   final controllerSubject = TextEditingController();
   final controllerMessage = TextEditingController();
   @override
@@ -39,6 +40,10 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           children: [
             buildTextField(title: 'Name', controller: controllerName),
+            SizedBox(
+              height: 8,
+            ),
+            buildTextField(title: 'From', controller: controllerFrom),
             SizedBox(
               height: 8,
             ),
@@ -62,7 +67,8 @@ class MyHomePage extends StatelessWidget {
                 child: Text('SEND'),
                 onPressed: () => sendEmail(
                     name: controllerName.text,
-                    email: controllerTo.text,
+                    toEmail: controllerTo.text,
+                    fromEmail: controllerFrom.text,
                     message: controllerMessage.text,
                     subject: controllerSubject.text)
                 //   launchEmail(
@@ -90,7 +96,8 @@ class MyHomePage extends StatelessWidget {
   // }
   Future sendEmail({
     @required String name,
-    @required String email,
+    @required String fromEmail,
+    @required String toEmail,
     @required String subject,
     @required String message,
   }) async {
@@ -103,16 +110,16 @@ class MyHomePage extends StatelessWidget {
       url,
       headers: {
         'origin': 'http://localhost',
-        'Content-Type': 'aplication/json'
+        'Content-Type': 'application/json'
       },
       body: json.encode({
         'service_id': serviceId,
         'template_id': templateId,
         'user_id': userId,
         'template_params': {
-          'user_name': name,
-          'user_email': email,
-          'to_email': 'other.email@gmail.com',
+          'to_name': name,
+          'user_email': fromEmail,
+          'to_email': toEmail,
           'user_subject': subject,
           'user_message': message,
         }
